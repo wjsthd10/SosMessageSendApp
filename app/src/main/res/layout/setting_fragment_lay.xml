@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#A9C1C1C1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/setting_view_main"
+        android:background="@color/white"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="300dp"
+        android:layout_height="500dp">
+
+        <TextView
+            android:text="@string/setting_view_title"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="23sp"
+            android:background="@color/title_color"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/setting_option_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="8"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:padding="8dp"
+            android:orientation="vertical"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/setting_can_btn"
+                android:text="@string/can_text"
+                android:layout_width="0dp"
+                android:background="@drawable/btn_selector_bg"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+
+
+            <TextView
+                android:id="@+id/setting_sav_btn"
+                android:text="@string/sav_text"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:background="@drawable/btn_selector_bg"
+                android:textColor="@color/black"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
