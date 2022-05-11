@@ -25,6 +25,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.telephony.SmsManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -139,15 +140,15 @@ public class SendSOSForeground extends Service implements SensorEventListener, L
         return START_STICKY;
     }
 
-    private void startVib(int vibPos){
-        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createOneShot(vibPos, VibrationEffect.DEFAULT_AMPLITUDE));
-        } else {
-            vibrator.vibrate(vibPos);
-        }
-    }
+//    private void startVib(int vibPos){
+//        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            vibrator.vibrate(VibrationEffect.createOneShot(vibPos, VibrationEffect.DEFAULT_AMPLITUDE));
+//        } else {
+//            vibrator.vibrate(vibPos);
+//        }
+//    }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -182,7 +183,7 @@ public class SendSOSForeground extends Service implements SensorEventListener, L
                 if (shakeCount == 0 ) {
                     timer = new Timer();
                     timer.schedule(tt, 1300, 1);
-                    startVib(100);// 구조신호 발신 시작
+//                    startVib(100);// 구조신호 발신 시작
                 }
 
                 shakeCount++;
@@ -200,6 +201,8 @@ public class SendSOSForeground extends Service implements SensorEventListener, L
 
         }
     }
+
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {

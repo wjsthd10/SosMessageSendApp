@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.widget.Toast;
 
 import com.song.sosmessagesendapp.R;
 
@@ -46,23 +47,21 @@ public class MainActivity extends AppCompatActivity {// 인트로로 사용
                         new String[]{
                                 Manifest.permission.ACCESS_COARSE_LOCATION,
                                 Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.SEND_SMS
                         },
                         PERMISSION_REQUEST_CODE);
             }else {
                 setGPS_start();
             }
 
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.SEND_SMS)
-                    != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.SEND_SMS)) {
-                } else {
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.SEND_SMS},
-                            SEND_MESSAGE_CODE);
-                }
-            }
+//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+//                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.SEND_SMS)) {
+//                } else {
+//                    ActivityCompat.requestPermissions(this,
+//                            new String[]{Manifest.permission.SEND_SMS},
+//                            SEND_MESSAGE_CODE);
+//                }
+//            }
         }
 
 
@@ -102,7 +101,10 @@ public class MainActivity extends AppCompatActivity {// 인트로로 사용
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode==PERMISSION_REQUEST_CODE){
-            if (grantResults.length > 0 && grantResults[0]== PackageManager.PERMISSION_GRANTED && grantResults[1]== PackageManager.PERMISSION_GRANTED ){// 앱 이용 권한이 있을 경우
+            if (grantResults.length > 0 && grantResults[0]== PackageManager.PERMISSION_GRANTED
+                    && grantResults[1]== PackageManager.PERMISSION_GRANTED
+                    && grantResults[2]==PackageManager.PERMISSION_GRANTED){// 앱 이용 권한이 있을 경우
+
                 if (isLocationEnabled()) {
                     Intent intent=new Intent(this, MapActivity.class);// 지도 화면 이동.
                     startActivity(intent);
@@ -111,9 +113,14 @@ public class MainActivity extends AppCompatActivity {// 인트로로 사용
                     setGPS_start();
                 }
 
-            }
-        } else if (requestCode == SEND_MESSAGE_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            }else {
+//                if (grantResults[1]!= PackageManager.PERMISSION_GRANTED){
+//                    Toast.makeText(this, "권한을 획득하지 못하여 앱을 종료합니다.", Toast.LENGTH_SHORT).show();
+//                }else if (grantResults[2]!=PackageManager.PERMISSION_GRANTED){
+//
+//                }
+                Toast.makeText(this, "권한을 획득하지 못하여 앱을 종료합니다.", Toast.LENGTH_SHORT).show();
+                finish();
 
             }
         }

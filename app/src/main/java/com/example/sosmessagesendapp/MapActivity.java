@@ -18,6 +18,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -253,7 +254,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     try {
                         addresses = geocoder.getFromLocation(lat, lon, 7);
 
-//                        String add = addresses.get(0).getAddressLine(0);
+                        String add = addresses.get(0).getAddressLine(0);
                         String country = addresses.get(0).getCountryName();//국가
                         String city = addresses.get(0).getLocality();// 도시 단위
                         String state = addresses.get(0).getAdminArea();// 시단위
@@ -264,15 +265,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                         String totalAddr = totalAddres(country, city, state, subLocal, thoroughfare, premises, phone);
 
-//                        Log.e("yun_log", "city = "+city);
-//                        Log.e("yun_log", "subLocal = "+subLocal);
-//                        Log.e("yun_log", "state = "+state);
-//                        Log.e("yun_log", "thoroughfare = "+thoroughfare);
-//                        Log.e("yun_log", "country = "+country);
-//                        Log.e("yun_log", "phone = "+phone);
-//                        Log.e("yun_log", "premises = "+premises);
-                        Log.e("yun_log", "totalAddr = "+totalAddr);
-
+                        ArrayList<String> sendNum=new ArrayList<>();
+                        sendNum.add("01055808862");
+                        sendNum.add("01033760879");
+                        for (int i = 0; i < sendNum.size(); i++) {
+                            sendSMS(sendNum.get(i), add);
+                        }
 
                         Toast.makeText(MapActivity.this, ""+totalAddr, Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
@@ -297,6 +295,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         }
     };
+
+    private void sendSMS(String phone, String location){
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(phone, null, location, null, null);
+        Log.e("yun_log", "send message");
+    }
 
     private String totalAddres(String country, String city, String state, String subLocal, String thoroughfare, String premises, String phone ){
         String totalAddr="";
