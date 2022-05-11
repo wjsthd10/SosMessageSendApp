@@ -5,13 +5,19 @@
       <map>
         <entry key="..\:/my_android_project/SosMessageSendApp/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/my_android_project/SosMessageSendApp/app/src/main/res/layout/activity_map.xml" value="0.22" />
+        <entry key="..\:/my_android_project/SosMessageSendApp/app/src/main/res/layout/setting_fragment_lay.xml" value="0.22" />
+        <entry key="..\:/my_android_project/SosMessageSendApp2/app/src/main/res/drawable/add_phone_number_btn.xml" value="0.1495" />
+        <entry key="..\:/my_android_project/SosMessageSendApp2/app/src/main/res/drawable/add_phone_number_selector.xml" value="0.1495" />
+        <entry key="..\:/my_android_project/SosMessageSendApp2/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1495" />
+        <entry key="..\:/my_android_project/SosMessageSendApp2/app/src/main/res/drawable/ic_phone_number_add_gray.xml" value="0.1495" />
+        <entry key="..\:/my_android_project/SosMessageSendApp2/app/src/main/res/layout/setting_fragment_lay.xml" value="0.25" />
         <entry key="..\:/work_project/MessageSendProjectApp/app/src/main/res/drawable/btn_bg_origin.xml" value="0.123" />
         <entry key="..\:/work_project/MessageSendProjectApp/app/src/main/res/layout/activity_map.xml" value="0.2" />
         <entry key="..\:/work_project/MessageSendProjectApp/app/src/main/res/layout/setting_fragment_lay.xml" value="0.24947916666666667" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

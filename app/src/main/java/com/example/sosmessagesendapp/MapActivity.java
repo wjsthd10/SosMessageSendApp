@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -40,13 +41,13 @@ import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.util.FusedLocationSource;
-import com.song.sosmessagesendapp.R;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -254,25 +255,25 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     try {
                         addresses = geocoder.getFromLocation(lat, lon, 7);
 
-                        String add = addresses.get(0).getAddressLine(0);
-                        String country = addresses.get(0).getCountryName();//국가
-                        String city = addresses.get(0).getLocality();// 도시 단위
-                        String state = addresses.get(0).getAdminArea();// 시단위
-                        String subLocal = addresses.get(0).getSubLocality();//구단위
-                        String thoroughfare = addresses.get(0).getThoroughfare();// 동단위
-                        String premises = addresses.get(0).getPremises();//도로명 주소
-                        String phone = addresses.get(0).getPhone();// 번호
+                        String add = addresses.get(0).getAddressLine(0);// 이 주소가 가장 정확 하더라...
+//                        String country = addresses.get(0).getCountryName();//국가
+//                        String city = addresses.get(0).getLocality();// 도시 단위
+//                        String state = addresses.get(0).getAdminArea();// 시단위
+//                        String subLocal = addresses.get(0).getSubLocality();//구단위
+//                        String thoroughfare = addresses.get(0).getThoroughfare();// 동단위
+//                        String premises = addresses.get(0).getPremises();//도로명 주소
+//                        String phone = addresses.get(0).getPhone();// 번호
 
-                        String totalAddr = totalAddres(country, city, state, subLocal, thoroughfare, premises, phone);
+//                        String totalAddr = totalAddres(country, city, state, subLocal, thoroughfare, premises, phone);
 
-                        ArrayList<String> sendNum=new ArrayList<>();
-                        sendNum.add("01055808862");
-                        sendNum.add("01033760879");
+                        ArrayList<String> sendNum=new ArrayList<>();// 쉐어드에 저장하여 불러오기
+                        SharedPreferences pref = getSharedPreferences("SMS_SEND_NUMBER", MODE_PRIVATE);
+                        sendNum.addAll(pref.getStringSet("PHONE_NUM", new HashSet<>()));
                         for (int i = 0; i < sendNum.size(); i++) {
                             sendSMS(sendNum.get(i), add);
                         }
 
-                        Toast.makeText(MapActivity.this, ""+totalAddr, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MapActivity.this, ""+totalAddr, Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

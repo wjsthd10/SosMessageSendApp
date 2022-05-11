@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SosMessageSendApp</string>
+    <string name="app_name">긴급문자발송</string>
     <string name="setting_view_title">앱 설정</string>
     <string name="can_text">취소</string>
     <string name="sav_text">저장</string>

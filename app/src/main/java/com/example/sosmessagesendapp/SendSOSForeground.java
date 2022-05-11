@@ -109,7 +109,7 @@ public class SendSOSForeground extends Service implements SensorEventListener, L
         builder = new NotificationCompat.Builder(getBaseContext(), CHANNEL_ID);
         builder.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND);
         builder.setVibrate(new long[]{0});
-        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setSmallIcon(R.drawable.app_icon);
         builder.setContentTitle("SOS신호 감지중");
         builder.setAutoCancel(true);
         builder.setOnlyAlertOnce(true);
