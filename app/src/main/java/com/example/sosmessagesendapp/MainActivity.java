@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.song.sosmessagesendapp.R;
 
+//import com.song.sosmessagesendapp.R;
+
 public class MainActivity extends AppCompatActivity {// 인트로로 사용
 
     private static final int GPS_REQUEST_CODE=1001;
