@@ -1,5 +1,6 @@
 package com.example.sosmessagesendapp;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -7,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -83,6 +86,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 //
 //    SensorManager sensorManager;
 //    Sensor sensor;
+    PhoneNumberDB helper;
 
 
     @Override
@@ -236,6 +240,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
     private Handler sHandler=new Handler(){
+        @SuppressLint("Range")
         @Override
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what){
@@ -268,8 +273,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 //                        String totalAddr = totalAddres(country, city, state, subLocal, thoroughfare, premises, phone);
 
                         ArrayList<String> sendNum=new ArrayList<>();// 쉐어드에 저장하여 불러오기
-                        SharedPreferences pref = getSharedPreferences("SMS_SEND_NUMBER", MODE_PRIVATE);
-                        sendNum.addAll(pref.getStringSet("PHONE_NUM", new HashSet<>()));
+                        helper = new PhoneNumberDB(MapActivity.this, "send_number.db", null, 1);
+                        SQLiteDatabase db = helper.getReadableDatabase();
+                        Cursor c = db.query(helper.getTableName(), null,null,null,null,null,null);
+                        while (c.moveToNext()) {
+                            sendNum.add(c.getString(c.getColumnIndex("phoneNum")));
+                        }
+                        c.close();
+
                         for (int i = 0; i < sendNum.size(); i++) {
                             sendSMS(sendNum.get(i), add);
                         }

@@ -1,8 +1,11 @@
 package com.example.sosmessagesendapp;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.song.sosmessagesendapp.R;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,14 +40,19 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     Context mContext;
     Handler mHandler;
     RecyclerView settingList;
+    PhoneNumberAdapter adapter;
+
     TextView canBtn, savBtn;
     EditText phoneNumEditor;
     ImageView editBtn;
     private static final int SETTING_SAVE = 5001;
     private static final int SETTING_CANCEL = 5002;
-    SharedPreferences pref;
-    SharedPreferences.Editor editor;
-    Set<String> strSet;
+
+    PhoneNumberDB dbHelper;
+    SQLiteDatabase dbInsert;
+    SQLiteDatabase dbSelect;
+
+    ArrayList<String> sendNumberArr=new ArrayList<>();
 
     public SettingFragment(Context mContext, Handler mHandler){
         this.mContext=mContext;
@@ -62,30 +71,49 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    @SuppressLint("Range")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         canBtn.setOnClickListener(this);
         savBtn.setOnClickListener(this);
         editBtn.setOnClickListener(this);
-        pref = getContext().getSharedPreferences("SMS_SEND_NUMBER", Context.MODE_PRIVATE);
-        editor = pref.edit();
 
-        strSet = pref.getStringSet("PHONE_NUM", new HashSet<>());
+        dbHelper = new PhoneNumberDB(mContext, "send_number.db", null, 1);
+        dbInsert=dbHelper.getWritableDatabase();
+        dbSelect=dbHelper.getReadableDatabase();
+        dbHelper.onCreate(dbInsert);
+
+        sendNumberArr.clear();
+        Cursor c = dbSelect.query(dbHelper.getTableName(), null, null, null,null,null,null);
+        while (c.moveToNext()) {
+            sendNumberArr.add(c.getString(c.getColumnIndex("phoneNum")));
+            Log.e("yun_log", "get data = "+c.getString(c.getColumnIndex("phoneNum")));
+        }
+        c.close();
+        adapter = new PhoneNumberAdapter(mContext, sendNumberArr);
+        settingList.setAdapter(adapter);
 
         phoneNumEditor.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE) {
                     if (phoneNumEditor.getText().length() > 9) {
-                        strSet.add(phoneNumEditor.getText().toString());
-                        editor.putStringSet("PHONE_NUM", strSet);
-                        editor.commit();
+
+                        if (!sendNumberArr.contains(phoneNumEditor.getText().toString())){
+                            Log.e("yun_log", "get phone number = "+phoneNumEditor.getText().toString());
+                            dbHelper.onInsertNumber(dbInsert, phoneNumEditor.getText().toString());
+                            sendNumberArr.add(phoneNumEditor.getText().toString());
+                            phoneNumEditor.setText("");
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 }
                 return false;
             }
         });
+
+
     }
 
     @Override
@@ -111,11 +139,15 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.phone_number_add_btn:// 폰번호 저장 버튼
                 if (phoneNumEditor.getText().length() > 9) {
-                    strSet.add(phoneNumEditor.getText().toString());
-                    editor.putStringSet("PHONE_NUM", strSet);
-                    editor.commit();
+                    phoneNumEditor.setText("");
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        phoneNumEditor.setText("");
     }
 }
