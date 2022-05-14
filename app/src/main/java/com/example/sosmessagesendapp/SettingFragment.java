@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -139,7 +140,14 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.phone_number_add_btn:// 폰번호 저장 버튼
                 if (phoneNumEditor.getText().length() > 9) {
-                    phoneNumEditor.setText("");
+                    if (!sendNumberArr.contains(phoneNumEditor.getText().toString())){
+                        dbHelper.onInsertNumber(dbInsert, phoneNumEditor.getText().toString());
+                        sendNumberArr.add(phoneNumEditor.getText().toString());
+                        phoneNumEditor.setText("");
+                        adapter.notifyDataSetChanged();
+                        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(phoneNumEditor.getWindowToken(), 0);
+                    }
                 }
                 break;
         }

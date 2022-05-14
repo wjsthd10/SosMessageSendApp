@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -65,6 +66,26 @@ public class PhoneNumberAdapter extends RecyclerView.Adapter {
                 return false;
             }
         });
+        vh.remveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle(phoneNums.get(pos)+"번호를 삭제 하시겠습니까?");
+                builder.setMessage("번호를 삭제하시면 해당 번호를 발송 목록에서 제외합니다.");
+                builder.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //삭제동작
+                        SQLiteDatabase db = helper.getWritableDatabase();
+                        helper.onRemoveNumber(db, phoneNums.get(pos));
+                        phoneNums.remove(pos);
+                        notifyDataSetChanged();
+                    }
+                });
+                builder.setNegativeButton("취소", null);
+                builder.create().show();
+            }
+        });
     }
 
     @Override
@@ -75,10 +96,12 @@ public class PhoneNumberAdapter extends RecyclerView.Adapter {
     private class VH extends RecyclerView.ViewHolder {
 
         TextView phoneTxt;
+        ImageView remveBtn;
 
         public VH(@NonNull View itemView) {
             super(itemView);
             phoneTxt = itemView.findViewById(R.id.phone_number_text);
+            remveBtn = itemView.findViewById(R.id.phone_remove_btn);
         }
     }
 

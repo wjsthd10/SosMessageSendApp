@@ -9,8 +9,8 @@ android {
         applicationId "com.song.sosmessagesendapp"
         minSdk 21
         targetSdk 31
-        versionCode 12
-        versionName "1.2"
+        versionCode 14
+        versionName "1.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

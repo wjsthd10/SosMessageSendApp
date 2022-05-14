@@ -311,7 +311,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void sendSMS(String phone, String location){
         SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(phone, null, location, null, null);
+        smsManager.sendTextMessage(phone, null, "긴급문자가 ["+location+"]에서 발송되었습니다.", null, null);
         Log.e("yun_log", "send message");
     }
 

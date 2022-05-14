@@ -26,6 +26,9 @@
         android:id="@+id/settingBtn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:src="@drawable/ic_setting_btn"
+        android:backgroundTint="@color/white"
+        app:borderWidth="5dp"
         android:layout_margin="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
