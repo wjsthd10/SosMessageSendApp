@@ -31,16 +31,19 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/white"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/phone_number_editor"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="10dp"
+                android:hint="' - '업이 번호입력"
+                android:textColorHint="@color/btn_border"
                 android:maxLines="1"
                 android:maxLength="11"
+                android:textColor="@color/black"
+                android:paddingLeft="10dp"
+                android:background="@drawable/btn_bg_origin"
                 android:inputType="numberDecimal"
                 android:imeOptions="actionDone"
                 android:layout_weight="1"/>
@@ -77,6 +80,56 @@
             android:paddingBottom="4dp"
             android:orientation="vertical"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:text="긴급신호 발신 방법"
+                android:background="@drawable/btn_bg_origin"
+                android:gravity="center_vertical"
+                android:paddingLeft="6dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_height="match_parent"/>
+
+            <RadioGroup
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:background="@drawable/btn_bg_origin"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/select_option_shake"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:gravity="center_vertical"
+                    android:focusable="true"
+                    android:textColor="@color/black"
+                    android:buttonTint="@color/black"
+                    android:text="흔들기"
+                    android:layout_height="match_parent"/>
+
+                <RadioButton
+                    android:id="@+id/select_option_touch"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:buttonTint="@color/black"
+                    android:text="터치"
+                    android:layout_height="match_parent"/>
+
+            </RadioGroup>
+        </LinearLayout>
+
+<!--        저장, 취소 버튼 start-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"

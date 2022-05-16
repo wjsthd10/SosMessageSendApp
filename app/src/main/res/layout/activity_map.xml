@@ -13,14 +13,34 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+<!--        <TextView-->
+<!--            android:text="위치 확인"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:gravity="center"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textSize="20sp"-->
+<!--            android:background="#FFC107"/>-->
+
         <com.naver.maps.map.MapView
             android:id="@+id/map_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="11"/>
 
-
+<!--광고 추가하기-->
     </LinearLayout>
+
+    <View
+        android:id="@+id/sos_send_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="100dp"
+        android:layout_width="270dp"
+        android:layout_height="100dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/settingBtn"

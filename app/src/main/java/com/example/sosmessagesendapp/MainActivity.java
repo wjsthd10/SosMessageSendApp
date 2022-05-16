@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -13,9 +14,13 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.song.sosmessagesendapp.R;
+
+import java.util.ArrayList;
 
 //import com.song.sosmessagesendapp.R;
 
@@ -28,45 +33,90 @@ public class MainActivity extends AppCompatActivity {// 인트로로 사용
     boolean locationOk=false;
     boolean mmsOk=false;
 
+    RecyclerView permissionListView;
+    PermissionAdapter adapter;
+    TextView pCancelBtn, pOkBtn;
+    ArrayList<PermissionItem> pItems=new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        permissionListView = findViewById(R.id.permission_list_view);
+        pCancelBtn = findViewById(R.id.permission_select_cancel);
+        pOkBtn = findViewById(R.id.permission_select_ok);
+
+
+    }
+
+    private void permissionSet(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            pItems.add(new PermissionItem(R.drawable.ic_location_permission, "위치정보 권한","긴급 메시지에 첨부될 위치정보를 획득하기 위한 필수 권한입니다."));
+        }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            pItems.add(new PermissionItem(R.drawable.ic_sms_permission, "SMS권한","긴급 메시지 발송을 위한 필수 권한입니다."));
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if (locationOk && mmsOk) {
+        permissionSet();
+
+        if (pItems.size() == 0) {
             Intent intent=new Intent(MainActivity.this, MapActivity.class);
             startActivity(intent);
             finish();
         }else {
-            if (isLocationEnabled()) {
-                ActivityCompat.requestPermissions(MainActivity.this,
-                        new String[]{
-                                Manifest.permission.ACCESS_COARSE_LOCATION,
-                                Manifest.permission.ACCESS_FINE_LOCATION,
-                                Manifest.permission.SEND_SMS
-                        },
-                        PERMISSION_REQUEST_CODE);
-            }else {
-                setGPS_start();
-            }
-
-//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-//                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.SEND_SMS)) {
-//                } else {
-//                    ActivityCompat.requestPermissions(this,
-//                            new String[]{Manifest.permission.SEND_SMS},
-//                            SEND_MESSAGE_CODE);
-//                }
-//            }
+            adapter = new PermissionAdapter(this, pItems);
+            permissionListView.setAdapter(adapter);
         }
 
+        pCancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
+        pOkBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isLocationEnabled()) {
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{
+                                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                                    Manifest.permission.ACCESS_FINE_LOCATION,
+                                    Manifest.permission.SEND_SMS
+                            },
+                            PERMISSION_REQUEST_CODE);
+                }else {
+                    setGPS_start();
+                }
+            }
+        });
+
+//        if (locationOk && mmsOk) {
+//            Intent intent=new Intent(MainActivity.this, MapActivity.class);
+//            startActivity(intent);
+//            finish();
+//        }else {
+//            if (isLocationEnabled()) {
+//                ActivityCompat.requestPermissions(MainActivity.this,
+//                        new String[]{
+//                                Manifest.permission.ACCESS_COARSE_LOCATION,
+//                                Manifest.permission.ACCESS_FINE_LOCATION,
+//                                Manifest.permission.SEND_SMS
+//                        },
+//                        PERMISSION_REQUEST_CODE);
+//            }else {
+//                setGPS_start();
+//            }
+//
+//        }
 
     }
 
