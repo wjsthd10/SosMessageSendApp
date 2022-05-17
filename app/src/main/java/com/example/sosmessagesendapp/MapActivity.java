@@ -24,7 +24,9 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -54,6 +56,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -87,7 +91,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 //    SensorManager sensorManager;
 //    Sensor sensor;
     PhoneNumberDB helper;
-
+    ImageView sosBtn;
+    long sTouchTime=0;
+    TimerTask timerTask;
+    Timer timer;
+    Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +103,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_map);
         mapView = findViewById(R.id.map_view);
         settingBtn = findViewById(R.id.settingBtn);
+        sosBtn = findViewById(R.id.sos_send_btn);
         Log.e("yun_log", "onCreate mapview");
 
 //        sensorManager= (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -112,6 +121,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         settingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sosBtn.setVisibility(View.GONE);
                 sFragment = new SettingFragment(MapActivity.this,sHandler);
                 fm = getSupportFragmentManager();
                 tran = fm.beginTransaction();
@@ -120,6 +130,61 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 tran.commitNowAllowingStateLoss();
             }
         });
+
+//        sosBtn.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View view) {
+//                Log.e("yun_log", view.getDrawingTime()+"");
+//                Message message=new Message();
+//                message.what=SEND_SOS_MESSAGE;
+//                sHandler.sendMessage(message);
+//                return false;
+//            }
+//        });
+
+        sosBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    Log.e("yun_log", "time = "+sTouchTime);
+                    startVib(100);
+                    sTouchTime = System.currentTimeMillis();
+                    timer = new Timer();
+                    timerTask = new TimerTask() {
+                        @Override
+                        public void run() {
+                            Log.e("yun_log", "sTime = "+(System.currentTimeMillis() - sTouchTime));
+                            if (System.currentTimeMillis() - sTouchTime > 3000) {
+                                Log.e("yun_log", "time = "+sTouchTime);
+                                Message message=new Message();
+                                message.what=SEND_SOS_MESSAGE;
+                                sHandler.sendMessage(message);
+                                timerTask.cancel();
+                                timer.cancel();
+                            }
+                        }
+                    };
+                    timer.schedule(timerTask, 0, 1000);
+                }else if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+                    if (System.currentTimeMillis() - sTouchTime < 3000) {
+                        startVib(100);
+                        if (toast == null) {
+                            toast = Toast.makeText(MapActivity.this, "3초 이상 터치해야합니다.", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }else {
+                            toast.cancel();
+                            toast=null;
+                            toast = Toast.makeText(MapActivity.this, "3초 이상 터치해야합니다.", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+                    }
+                    timerTask.cancel();
+                    timer.cancel();
+                }
+                return false;
+            }
+        });
+
     }
 
 
@@ -286,6 +351,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         }
 
 //                        Toast.makeText(MapActivity.this, ""+totalAddr, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapActivity.this, "SOS메시지 발송 완료", Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -354,6 +420,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void finSetting(){
+        sosBtn.setVisibility(View.VISIBLE);
         fm.beginTransaction().remove(sFragment).commitNowAllowingStateLoss();
         fm.popBackStack();
     }
@@ -382,5 +449,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onDestroy() {
         super.onDestroy();
     }
+
+
 
 }
