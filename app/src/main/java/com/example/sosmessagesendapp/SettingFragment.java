@@ -20,6 +20,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.song.sosmessagesendapp.R;
 
 import java.util.ArrayList;
@@ -43,9 +49,11 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     RecyclerView settingList;
     PhoneNumberAdapter adapter;
 
-    TextView canBtn, savBtn;
+    TextView canBtn, savBtn, shakeValTxt;
     EditText phoneNumEditor;
     ImageView editBtn;
+    SeekBar seekBar;
+    AdView sAdView;
     private static final int SETTING_SAVE = 5001;
     private static final int SETTING_CANCEL = 5002;
 
@@ -54,6 +62,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     SQLiteDatabase dbSelect;
 
     ArrayList<String> sendNumberArr=new ArrayList<>();
+    SharedPreferences pref;
+    double mSeekbarVal=3.0;
 
     public SettingFragment(Context mContext, Handler mHandler){
         this.mContext=mContext;
@@ -69,6 +79,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         savBtn = view.findViewById(R.id.setting_sav_btn);
         phoneNumEditor = view.findViewById(R.id.phone_number_editor);
         editBtn = view.findViewById(R.id.phone_number_add_btn);
+        seekBar = view.findViewById(R.id.shake_value_seekbar);
+        shakeValTxt = view.findViewById(R.id.shake_value_text);
+        sAdView = view.findViewById(R.id.setting_ad);
         return view;
     }
 
@@ -79,6 +92,33 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         canBtn.setOnClickListener(this);
         savBtn.setOnClickListener(this);
         editBtn.setOnClickListener(this);
+
+        MobileAds.initialize(mContext, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {
+
+            }
+        });
+
+        sAdView.loadAd(new AdRequest.Builder().build());
+
+        pref = getContext().getSharedPreferences("SHAKE_VALUE_PREF", Context.MODE_PRIVATE);
+        String prefVal=pref.getString("value", "3.0");
+        seekBar.setProgress((int) (Double.parseDouble(prefVal)*10));
+        shakeValTxt.setText("흔들림 감지 감도는 "+prefVal+"입니다.");
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mSeekbarVal=progress/(double)10;
+                shakeValTxt.setText("흔들림 감지 감도는 "+mSeekbarVal+"입니다.");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
 
         dbHelper = new PhoneNumberDB(mContext, "send_number.db", null, 1);
         dbInsert=dbHelper.getWritableDatabase();
@@ -131,6 +171,10 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.setting_sav_btn:// 저장버튼
                 try {
+                    SharedPreferences.Editor editor=pref.edit();
+                    editor.putString("value", mSeekbarVal+"");
+                    editor.commit();
+
                     Message msg=new Message();
                     msg.what=SETTING_SAVE;
                     mHandler.handleMessage(msg);

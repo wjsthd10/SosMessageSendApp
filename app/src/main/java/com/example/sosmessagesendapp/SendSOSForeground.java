@@ -9,6 +9,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -58,7 +59,7 @@ public class SendSOSForeground extends Service implements SensorEventListener, L
 
     private long shakeTime;// 흔들림 감지 시간
     private static final int SHAKE_SKIP_TIME = 500;// 연속 흔들림 감지 0.5초 뒤에 흔들림이 감지되면 무시
-    private static final float SHAKE_THRESHOLD_GRAVITY = 2.7f;// 중력 가속도 높을 수록 강하게 흔들어야 감지가능 2.7f
+    private static float SHAKE_THRESHOLD_GRAVITY = 3.0f;// 중력 가속도 높을 수록 강하게 흔들어야 감지가능 3.0f
     NotificationManagerCompat notificationManagerCompat;
     int trafficsTag = 2255;
     int shakeCount = 0;
@@ -166,7 +167,11 @@ public class SendSOSForeground extends Service implements SensorEventListener, L
             Float f = gravityX * gravityX + gravityY * gravityY + gravityZ * gravityZ;
             double squaredD = Math.sqrt(f.doubleValue());
             float gForce = (float) squaredD;
+            SharedPreferences pref = getSharedPreferences("SHAKE_VALUE_PREF", Context.MODE_PRIVATE);
+            String prefVal=pref.getString("value", "3.0");
+            SHAKE_THRESHOLD_GRAVITY = Float.parseFloat(prefVal);
             if (gForce > SHAKE_THRESHOLD_GRAVITY) {
+                Log.e("yun_log", "SHAKE_THRESHOLD_GRAVITY = " + SHAKE_THRESHOLD_GRAVITY);
                 long currentTime = System.currentTimeMillis();
                 if (shakeTime + SHAKE_SKIP_TIME > currentTime) {// 0.5초 이내로 흔들림 감지 되지 않을 경우 리턴
                     return;

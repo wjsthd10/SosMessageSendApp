@@ -131,17 +131,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-//        sosBtn.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View view) {
-//                Log.e("yun_log", view.getDrawingTime()+"");
-//                Message message=new Message();
-//                message.what=SEND_SOS_MESSAGE;
-//                sHandler.sendMessage(message);
-//                return false;
-//            }
-//        });
-
         sosBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {

@@ -50,6 +50,6 @@ dependencies {
     implementation 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
 
     //admob(광고 추가)
-//    implementation 'com.google.android.gms:play-services-ads:20.6.0'
+    implementation 'com.google.android.gms:play-services-ads:20.6.0'
 
 }

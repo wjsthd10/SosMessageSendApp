@@ -75,12 +75,49 @@
             android:layout_width="match_parent"
             android:background="#BDBDBD"
             android:layout_height="0dp"
-            android:layout_weight="7"
+            android:layout_weight="5"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:paddingBottom="4dp"
             android:orientation="vertical"/>
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/shake_value_text"
+                android:text="흔들림 감지 감도는 3.0입니다."
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <SeekBar
+                android:id="@+id/shake_value_seekbar"
+                android:layout_width="match_parent"
+                android:background="@color/btn_border"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:max="100"
+                android:min="30"
+                android:progress="30"/>
+
+        </LinearLayout>
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/setting_ad"
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-6971751491716584/5696263742"/>
+
+        <LinearLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:orientation="horizontal"
             android:layout_height="0dp"
