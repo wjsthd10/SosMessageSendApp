@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "689285121651",
+    "project_id": "my-sos-message-send-app",
+    "storage_bucket": "my-sos-message-send-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689285121651:android:f1122ca4148e6e057bcc06",
+        "android_client_info": {
+          "package_name": "com.song.sosmessagesendapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "689285121651-ua300eotpa9ro113aa960p3c6sc4fov3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.song.sosmessagesendapp",
+            "certificate_hash": "3e6f0b59b3af427cf88b254a80bb6c37fa2a76ae"
+          }
+        },
+        {
+          "client_id": "689285121651-8ot9caqb8ec9d5o8pcgi5naee8jjtlrb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3_zC4QTw2_PdtNSJgL77l0jyUiz3Wncg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "689285121651-8ot9caqb8ec9d5o8pcgi5naee8jjtlrb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

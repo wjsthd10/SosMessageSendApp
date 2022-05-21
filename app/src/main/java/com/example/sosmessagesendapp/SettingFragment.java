@@ -29,14 +29,19 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.song.sosmessagesendapp.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -65,6 +70,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     SharedPreferences pref;
     double mSeekbarVal=3.0;
 
+    AdRequest adRequest;
+
     public SettingFragment(Context mContext, Handler mHandler){
         this.mContext=mContext;
         this.mHandler=mHandler;
@@ -81,9 +88,11 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         editBtn = view.findViewById(R.id.phone_number_add_btn);
         seekBar = view.findViewById(R.id.shake_value_seekbar);
         shakeValTxt = view.findViewById(R.id.shake_value_text);
-        sAdView = view.findViewById(R.id.setting_ad);
+        sAdView = view.findViewById(R.id.adView);
         return view;
     }
+
+
 
     @SuppressLint("Range")
     @Override
@@ -93,14 +102,51 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         savBtn.setOnClickListener(this);
         editBtn.setOnClickListener(this);
 
-        MobileAds.initialize(mContext, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {
+        adRequest = new AdRequest.Builder().build();
+        Log.e("yun_log", "is TestDevice = "+adRequest.isTestDevice(mContext));
 
+        sAdView.setAdSize(AdSize.BANNER);
+        sAdView.setAdUnitId("ca-app-pub-6971751491716584/5696263742");
+        sAdView.loadAd(adRequest);
+        Log.e("yun_log", "adRequest = "+adRequest.getContentUrl());
+
+        sAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                super.onAdFailedToLoad(loadAdError);
+                Log.e("yun_log", "add load onAdFailedToLoad = "+loadAdError);
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                Log.e("yun_log", "add load onAdLoaded");
+            }
+
+            @Override
+            public void onAdClicked() {
+                super.onAdClicked();
+                Log.e("yun_log", "add load onAdClicked");
+            }
+
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                Log.e("yun_log", "add load onAdClosed");
+            }
+
+            @Override
+            public void onAdImpression() {
+                super.onAdImpression();
+                Log.e("yun_log", "add load onAdImpression");
+            }
+
+            @Override
+            public void onAdOpened() {
+                super.onAdOpened();
+                Log.e("yun_log", "add load onAdOpened");
             }
         });
-
-        sAdView.loadAd(new AdRequest.Builder().build());
 
         pref = getContext().getSharedPreferences("SHAKE_VALUE_PREF", Context.MODE_PRIVATE);
         String prefVal=pref.getString("value", "3.0");

@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {// 인트로로 사용
     }
 
     private void permissionSet(){
+        pItems.clear();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             pItems.add(new PermissionItem(R.drawable.ic_location_permission, "위치정보 권한","긴급 메시지에 첨부될 위치정보를 획득하기 위한 필수 권한입니다."));

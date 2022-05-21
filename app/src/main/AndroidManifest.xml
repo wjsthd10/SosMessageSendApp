@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -35,6 +36,9 @@
 
         </activity>
 
+        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-6971751491716584~1495511890"/>
+
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="k0lio77gbx"/>
@@ -50,8 +54,7 @@
             </intent-filter>
         </receiver>
 
-        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-6971751491716584~1495511890"/>
+
     </application>
 
 </manifest>
