@@ -218,7 +218,7 @@ public class SendSOSForeground extends Service implements SensorEventListener, L
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        Log.e("yun_log", "location listner in");
+//        Log.e("yun_log", "location listner in");
         if (location.getProvider().equals(LocationManager.GPS_PROVIDER) || location.getProvider().equals(LocationManager.NETWORK_PROVIDER)) {
             if (lat != location.getLatitude() || lng != location.getLongitude()) {
                 lat = location.getLatitude();

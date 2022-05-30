@@ -15,6 +15,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,6 +39,8 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.gms.maps.GoogleMap;
 //import com.google.android.gms.maps.MapView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.naver.maps.map.MapView;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraUpdate;
@@ -48,16 +51,31 @@ import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.util.FusedLocationSource;
 import com.song.sosmessagesendapp.R;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import okhttp3.Interceptor;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -324,7 +342,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 //                        String premises = addresses.get(0).getPremises();//도로명 주소
 //                        String phone = addresses.get(0).getPhone();// 번호
 
+                        String locationString = "https://maps.google.com/?q="+lat+","+lon;
+
 //                        String totalAddr = totalAddres(country, city, state, subLocal, thoroughfare, premises, phone);
+
+
+
 
                         ArrayList<String> sendNum=new ArrayList<>();// 쉐어드에 저장하여 불러오기
                         helper = new PhoneNumberDB(MapActivity.this, "send_number.db", null, 1);
@@ -335,9 +358,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         }
                         c.close();
 
-                        for (int i = 0; i < sendNum.size(); i++) {
-                            sendSMS(sendNum.get(i), add);
-                        }
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+//                                ShortURL.main(locationString);
+                                for (int i = 0; i < sendNum.size(); i++) {
+                                    sendSMS(sendNum.get(i), add, ShortURL.main(locationString));// 위치정보 문자열, 위치정보 지도로 보는 url
+                                }
+                            }
+                        }).start();
+
+
 
 //                        Toast.makeText(MapActivity.this, ""+totalAddr, Toast.LENGTH_SHORT).show();
                         Toast.makeText(MapActivity.this, "SOS메시지 발송 완료", Toast.LENGTH_SHORT).show();
@@ -364,9 +395,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     };
 
-    private void sendSMS(String phone, String location){
+    private void sendSMS(String phone, String location, String pathUrl){
         SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(phone, null, "긴급문자가 ["+location+"]에서 발송되었습니다.", null, null);
+        smsManager.sendTextMessage(phone, null, "긴급문자가 "+location+"에서 발송되었습니다."+pathUrl, null, null);
         Log.e("yun_log", "send message");
     }
 
@@ -438,6 +469,36 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onDestroy() {
         super.onDestroy();
     }
+
+//    public String CreateShortUrl(String baseURL){
+//        try {
+//            String originalUrl = URLEncoder.encode(baseURL, "UTF-8");
+//            String apiURL = "https://naveropenapi.apigw.ntruss.com/util/v1/shorturl?url=" + originalUrl;
+//            String clientID="k0lio77gbx";
+//            String clientSecret="Nb6J5uCJvW3twHvpzdr01j1ypBzoiDZt4d1qq4zo";
+//            Log.d("yun_log", "apiUrl = "+apiURL);
+//
+//            Map<String, String> requestHeaders = new HashMap<>();
+//            requestHeaders.put("X-NCP-APIGW-API-KEY-ID", clientID);
+//            requestHeaders.put("X-NCP-APIGW-API-KEY", clientSecret);
+////            requestHeaders.put("https","https://openapi.naver.com/v1/util/shorturl");
+////            requestHeaders.put()
+//
+//            String responseBody = ShortURL.get(apiURL, requestHeaders);
+//            JsonParser jsonParser = new JsonParser();
+//            JsonElement jsonElement = jsonParser.parse(responseBody);
+//            jsonElement = jsonElement.getAsJsonObject().get("result");
+//
+//            String result = String.valueOf(jsonElement.getAsJsonObject().get("url"));
+//            result = result.substring(1);
+//            result = result.substring(0,result.length()-1);
+//            return result;
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//            Log.d("yun_log", "Exception e = "+e);
+//            return "";
+//        }
+//    }
 
 
 
